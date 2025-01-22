@@ -1,0 +1,55 @@
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+<S:Body>
+	<ns2:consultarCedulasResponse xmlns:ns2="http://ws.ani.rnec.gov.co">
+		<return>
+			<estadoConsulta>
+				<numeroControl>3376950602</numeroControl>
+				<codError>0</codError>
+				<descripcionError>OK</descripcionError>
+				<fechaHoraConsulta>2024-12-03 18:51:05</fechaHoraConsulta>
+			</estadoConsulta>
+			<datosCedulas>
+				<datos>
+					<nuip>123</nuip>
+					<codError>0</codError>
+					<primerApellido>ROCHA</primerApellido>
+					<particula></particula>
+					<segundoApellido>RIAÑO</segundoApellido>
+					<primerNombre>RAFAEL</primerNombre>
+					<segundoNombre>ANTONIO</segundoNombre>
+					<municipioExpedicion>BOGOTA D.C.</municipioExpedicion>
+					<departamentoExpedicion>CUNDINAMARCA</departamentoExpedicion>
+					<fechaExpedicion>27/11/1982</fechaExpedicion>
+					<estadoCedula>21</estadoCedula>
+					<numResolucion>4970</numResolucion>
+					<informante>NOTARIO 26</informante>
+					<serial/>
+					<fechaDefuncion>30/05/2006</fechaDefuncion>
+					<fechaReferencia>31/05/2006</fechaReferencia>
+					<fechaAfectacion/>
+				</datos>
+				<datos>
+					<nuip>4567</nuip>
+					<codError>0</codError>
+					<primerApellido>RAMOS</primerApellido>
+					<particula></particula>
+					<segundoApellido>SALAMANCA</segundoApellido>
+					<primerNombre>CARLOS</primerNombre>
+					<segundoNombre>JULIO</segundoNombre>
+					<municipioExpedicion>BOGOTA D.C.</municipioExpedicion>
+					<departamentoExpedicion>CUNDINAMARCA</departamentoExpedicion>
+					<fechaExpedicion>26/03/1953</fechaExpedicion>
+					<estadoCedula>21</estadoCedula>
+					<numResolucion>92</numResolucion>
+					<anoResolucion>92</anoResolucion>
+					<informante>REGIST.AUX. SANTA FE</informante>
+					<serial>4685130</serial>
+					<fechaDefuncion>30/05/2006</fechaDefuncion>
+					<fechaReferencia>31/05/2006</fechaReferencia>
+					<fechaAfectacion/>
+				</datos>
+			</datosCedulas>
+		</return>
+	</ns2:consultarCedulasResponse>
+	</S:Body>
+</S:Envelope>
