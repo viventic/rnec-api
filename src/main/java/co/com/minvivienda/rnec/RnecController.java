@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,7 +42,7 @@ public class RnecController {
             ObjectMapper objectMapper = new ObjectMapper();
             
     		try {
-    			objectMapper.readValue(jsonRequest, new TypeReference<Map<String, String>>(){});
+    			objectMapper.readValue(jsonRequest, new TypeReference<Map<String, List<String>>>(){});
     		} catch (JsonProcessingException e) {
     			e.printStackTrace();
     			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"response\":\"error\": \"message\":\"Los datos de entrada no son correctos\"}");
