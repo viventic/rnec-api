@@ -1,0 +1,20 @@
+<datos>
+	<nuip>4567</nuip>
+	<codError>0</codError>
+	<primerApellido>RAMOS</primerApellido>
+	<particula></particula>
+	<segundoApellido>SALAMANCA</segundoApellido>
+	<primerNombre>CARLOS</primerNombre>
+	<segundoNombre>JULIO</segundoNombre>
+	<municipioExpedicion>BOGOTA D.C.</municipioExpedicion>
+	<departamentoExpedicion>CUNDINAMARCA</departamentoExpedicion>
+	<fechaExpedicion>26/03/1953</fechaExpedicion>
+	<estadoCedula>21</estadoCedula>
+	<numResolucion>92</numResolucion>
+	<anoResolucion>92</anoResolucion>
+	<informante>REGIST.AUX. SANTA FE</informante>
+	<serial>4685130</serial>
+	<fechaDefuncion>30/05/2006</fechaDefuncion>
+	<fechaReferencia>31/05/2006</fechaReferencia>
+	<fechaAfectacion/>
+</datos>

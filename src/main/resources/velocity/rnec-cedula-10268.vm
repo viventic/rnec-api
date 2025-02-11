@@ -1,0 +1,20 @@
+<datos>
+	<nuip>10268</nuip>
+	<codError>0</codError>
+	<primerApellido>RODRIGO</primerApellido>
+	<particula></particula>
+	<segundoApellido>RODRIGUEZ</segundoApellido>
+	<primerNombre>CARLOS</primerNombre>
+	<segundoNombre>JULIAN</segundoNombre>
+	<municipioExpedicion>TIBU</municipioExpedicion>
+	<departamentoExpedicion>SANTANDER</departamentoExpedicion>
+	<fechaExpedicion>25/09/1983</fechaExpedicion>
+	<estadoCedula>21</estadoCedula>
+	<numResolucion>22</numResolucion>
+	<anoResolucion>83</anoResolucion>
+	<informante>REGIST.AUX. TIBU</informante>
+	<serial>4685130</serial>
+	<fechaDefuncion>30/05/2006</fechaDefuncion>
+	<fechaReferencia>31/05/2006</fechaReferencia>
+	<fechaAfectacion/>
+</datos>

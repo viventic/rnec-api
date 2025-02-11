@@ -1,0 +1,19 @@
+<datos>
+	<nuip>123</nuip>
+	<codError>0</codError>
+	<primerApellido>ROCHA</primerApellido>
+	<particula></particula>
+	<segundoApellido>RIAÑO</segundoApellido>
+	<primerNombre>RAFAEL</primerNombre>
+	<segundoNombre>ANTONIO</segundoNombre>
+	<municipioExpedicion>BOGOTA D.C.</municipioExpedicion>
+	<departamentoExpedicion>CUNDINAMARCA</departamentoExpedicion>
+	<fechaExpedicion>27/11/1982</fechaExpedicion>
+	<estadoCedula>21</estadoCedula>
+	<numResolucion>4970</numResolucion>
+	<informante>NOTARIO 26</informante>
+	<serial/>
+	<fechaDefuncion>30/05/2006</fechaDefuncion>
+	<fechaReferencia>31/05/2006</fechaReferencia>
+	<fechaAfectacion/>
+</datos>

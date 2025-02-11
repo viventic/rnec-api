@@ -5,12 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -40,9 +36,10 @@ public class RnecController {
     	
     	try {
             ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, List<String>> inputMap = null;
             
     		try {
-    			objectMapper.readValue(jsonRequest, new TypeReference<Map<String, List<String>>>(){});
+    			inputMap = objectMapper.readValue(jsonRequest, new TypeReference<Map<String, List<String>>>(){});
     		} catch (JsonProcessingException e) {
     			e.printStackTrace();
     			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"response\":\"error\": \"message\":\"Los datos de entrada no son correctos\"}");
@@ -50,8 +47,11 @@ public class RnecController {
     		
     		InputStream file = RnecController.class.getClassLoader().getResourceAsStream("velocity/rnec-response.vm");
     		String xmlOutputBody = templateParser(file);
+    		List<String> cedulas = inputMap.get("nuip"); 
+    		String datosCedulas = getDatosCedulas(cedulas);
+    		xmlOutputBody = xmlOutputBody.replace("#DATOS_CEDULAS", datosCedulas);
     		String jsonResponse = xmlToJson(xmlOutputBody);
-        	
+    		
         	return ResponseEntity.status(HttpStatus.OK).body(jsonResponse);
     	}catch(Exception ex) {
     		ex.printStackTrace();
@@ -80,77 +80,7 @@ public class RnecController {
             return null;
         }
     }
-    
-    
-    
-    public static String jsonToXmlBody(String documentJson) {
-		InputStream file = RnecController.class.getClassLoader().getResourceAsStream("velocity/soap-createReceived-body2.vm");
-		String xmlInputBody = templateParser(file);
-		
-    	Map<String, String> jsonInputMap =  new HashMap<>();;
-    	
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			JsonNode rootNode = objectMapper.readTree(documentJson);
-	        flattenJson("", rootNode, jsonInputMap);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-			return null;
-		}
-		
-		System.out.println("******* jsonInputMap ********");
-		System.out.println(jsonInputMap);
-		
-		
-		Map<String, String> templateValues = new HashMap<String, String>();
-		templateValues.put("targetDependence.code", (String) jsonInputMap.get("targetDependence.code"));
-		templateValues.put("sourceThirdPerson.identification", (String) jsonInputMap.get("sourceThirdPerson.identification"));
-		templateValues.put("sourceThirdPerson.address", (String) jsonInputMap.get("sourceThirdPerson.address"));
-		templateValues.put("sourceThirdPerson.municipality.code", (String) jsonInputMap.get("sourceThirdPerson.municipality.code"));	                
-		templateValues.put("type.id", (String) jsonInputMap.get("type.id"));
-		templateValues.put("targetUser.identification", (String) jsonInputMap.get("targetUser.identification"));
-		templateValues.put("sourceThirdPerson.name", (String) jsonInputMap.get("sourceThirdPerson.name"));
-		templateValues.put("sourceThirdPerson.lastname", (String) jsonInputMap.get("sourceThirdPerson.lastname"));
-		templateValues.put("sourceThirdPerson.email", (String) jsonInputMap.get("sourceThirdPerson.email"));
-		templateValues.put("reference", (String) jsonInputMap.get("reference"));
-		templateValues.put("observations", (String) jsonInputMap.get("observations"));
-		templateValues.put("authorDependence.code", (String) jsonInputMap.get("authorDependence.code"));
-		templateValues.put("sourceThirdPerson.phone", (String) jsonInputMap.get("sourceThirdPerson.phone"));
-		templateValues.put("author.identification", (String) jsonInputMap.get("author.identification"));
-		templateValues.put("sourceThirdPerson.identificationType.name", (String) jsonInputMap.get("sourceThirdPerson.identificationType.name"));
-		
-		
-		Iterator<Map.Entry<String, String>> itJson = templateValues.entrySet().iterator();
-        Map.Entry<String, String> pair = null;
-        while (itJson.hasNext()) {
-            pair = itJson.next(); 
-        	Pattern p = Pattern.compile("#\\{"+pair.getKey()+"\\}", Pattern.MULTILINE);
-        	Matcher m = p.matcher(xmlInputBody);
-        	xmlInputBody = m.replaceAll(pair.getValue() == null ? "-" : pair.getValue());
-        }
-        
-		return xmlInputBody;
-    }
-    
-    
-    
-    private static void flattenJson(String parentKey, JsonNode node, Map<String, String> result) {
-        if (node.isObject()) {
-            Iterator<Map.Entry<String, JsonNode>> fields = node.fields();
-            while (fields.hasNext()) {
-                Map.Entry<String, JsonNode> field = fields.next();
-                String newKey = parentKey.isEmpty() ? field.getKey() : parentKey + "." + field.getKey();
-                flattenJson(newKey, field.getValue(), result);
-            }
-        } else if (node.isArray()) {
-            for (int i = 0; i < node.size(); i++) {
-                String newKey = parentKey + "[" + i + "]";
-                flattenJson(newKey, node.get(i), result);
-            }
-        } else {
-            result.put(parentKey, node.asText());
-        }
-    }
+
     
     /**
      * Extrae el mensaje de fallo (nodo faultstring del XML de respuesta) cuando la busqueda no retorna ningun resultado
@@ -176,6 +106,7 @@ public class RnecController {
     }
     
     /**
+     * Retorna un string con el contenido del archivo especificado
      * 
      * @param file
      * @return
@@ -197,6 +128,43 @@ public class RnecController {
 
 		return templateContent.toString();
 	}
+	
+	
+	/**
+	 * Retorna un string en formato JSON con los datos de las cedulas especificadas  
+	 * 
+	 * @param cedulas
+	 * @return
+	 */
+	private String getDatosCedulas(List<String> cedulas){
+		String datosCedulas = "";
+		if(cedulas != null && !cedulas.isEmpty()) {
+			InputStream file = null;
+			for(String cedula : cedulas) {
+				try {
+		    		file = RnecController.class.getClassLoader().getResourceAsStream("velocity/rnec-cedula-" + cedula + ".vm");
+		    		if(file != null) {
+		    			datosCedulas = datosCedulas + templateParser(file);
+		    		}					
+				}catch(Exception ex) {
+					System.err.println("No existe el numero de cedula: " + ex.getMessage());
+				}
+			}
+			
+			try {
+				if(file != null) {
+					file.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}finally {
+				file = null;
+			}
+		}
+		
+		return datosCedulas;
+	}
+	
     
     /**
      * 
