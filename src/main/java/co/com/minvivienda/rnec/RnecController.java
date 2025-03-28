@@ -66,44 +66,54 @@ public class RnecController {
     @PostMapping(value = "/validarCedulas", produces = {"application/json"}, consumes = {"application/json"})
     @CrossOrigin(origins = "*")
     public ResponseEntity<?> validarCedulas(@RequestBody Map<String, Object> jsonRequest)  throws Exception {
-    	List<Map<String, Object>> miembrosHogar = null;
-    	List<String> cedulas = new ArrayList<String>();
-    	List<Map<String, Object>> miembrosHogarList =  new ArrayList<Map<String, Object>>();;
-    	Number numeroDocumento = null;
     	List<Map<String, Object>> postulaciones = (List<Map<String, Object>>) jsonRequest.get("postulaciones");
     	
-    	for(Map<String, Object> postulacion : postulaciones) {
-    		
-    		miembrosHogar = (List<Map<String, Object>>) postulacion.get("MiembrosHogar");
-    		for(Map<String, Object> miembroHogar : miembrosHogar) {
-    			numeroDocumento  = (Number) miembroHogar.get("NumeroDocumento");
-    			cedulas.add(String.valueOf(numeroDocumento));
-    			miembrosHogarList.add(miembroHogar);
-    		}
-    	}
-    	
+    	List<Map<String, Object>> miembrosHogar = null;
     	List<Map<String, Object>> postulacionesCumplen = new ArrayList<Map<String, Object>>();
     	List<Map<String, Object>> postulacionesNoCumplen = new ArrayList<Map<String, Object>>();
     	Map<String, Object> resultadoMiembroHogar = null;
+    	List<Map<String, Object>> resultadoMiembroHogarList = null;
+    	Map<String, Object> resultadoPostulacion = null;
+    	
     	int estadoRandom = 0;
-    	Map<String, Object> miembroHogar = null;
     	Map<Integer, String> estadosCedulas = RnecUtil.getEstadosCedulas();
-    	for(int i = 0; i < cedulas.size(); i++) {
-    		estadoRandom = RnecUtil.getEstadoRandom();
-			miembroHogar = miembrosHogarList.get(i);
-			
-			resultadoMiembroHogar = new LinkedHashMap<String, Object>();
-			resultadoMiembroHogar.put("PostulanteId", miembroHogar.get("PostulanteId"));
-			resultadoMiembroHogar.put("MiembroHogarId", miembroHogar.get("MiembroHogarId"));
-			resultadoMiembroHogar.put("TipoDocumentoCatId", miembroHogar.get("TipoDocumentoCatId"));
-			resultadoMiembroHogar.put("NumeroDocumento", miembroHogar.get("NumeroDocumento"));
-			resultadoMiembroHogar.put("EstadoCedula", estadoRandom);
-			resultadoMiembroHogar.put("DescripcionEstadoCedula", estadosCedulas.get(estadoRandom));
-			
-    		if(estadoRandom < 21) {
-    			postulacionesCumplen.add(resultadoMiembroHogar);
+    	int postulacionResultado = 1;
+    	
+    	for(Map<String, Object> postulacion : postulaciones) {
+    		postulacionResultado = 1;
+    		resultadoPostulacion = new LinkedHashMap<String, Object>();
+    		resultadoPostulacion.put("PostulanteId", postulacion.get("PostulanteId"));
+    		resultadoMiembroHogarList = new ArrayList<Map<String, Object>>();
+        	
+    		miembrosHogar = (List<Map<String, Object>>) postulacion.get("MiembrosHogar");
+    		for(Map<String, Object> miembroHogar : miembrosHogar) {
+    			estadoRandom = RnecUtil.getEstadoRandom();
+    			
+    			resultadoMiembroHogar = new LinkedHashMap<String, Object>();
+    			resultadoMiembroHogar.put("PostulanteId", miembroHogar.get("PostulanteId"));
+    			resultadoMiembroHogar.put("MiembroHogarId", miembroHogar.get("MiembroHogarId"));
+    			resultadoMiembroHogar.put("TipoDocumentoCatId", miembroHogar.get("TipoDocumentoCatId"));
+    			resultadoMiembroHogar.put("NumeroDocumento", miembroHogar.get("NumeroDocumento"));
+    			resultadoMiembroHogar.put("Valor", estadoRandom);
+    			resultadoMiembroHogar.put("Descripcion", estadosCedulas.get(estadoRandom));
+    			
+        		if(estadoRandom < 21) {
+        			resultadoMiembroHogar.put("Resultado", 1);
+        		}else {
+        			postulacionResultado = 0;
+        			resultadoMiembroHogar.put("Resultado", 0);
+        		}
+        		
+        		resultadoMiembroHogarList.add(resultadoMiembroHogar);
+    		}
+    		
+    		resultadoPostulacion.put("Resultado", postulacionResultado);
+    		resultadoPostulacion.put("MiembrosHogar", resultadoMiembroHogarList);
+    		
+    		if(postulacionResultado == 1) {
+    			postulacionesCumplen.add(resultadoPostulacion);
     		}else {
-    			postulacionesNoCumplen.add(resultadoMiembroHogar);
+    			postulacionesNoCumplen.add(resultadoPostulacion);
     		}	
     	}
     	

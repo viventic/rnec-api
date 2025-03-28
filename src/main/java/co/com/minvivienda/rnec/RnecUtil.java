@@ -82,7 +82,8 @@ public class RnecUtil {
      */
     public static Integer getEstadoRandom() {
     	Random random = new Random();
-    	int posEstado = random.nextInt(20);
+    	//int posEstado = random.nextInt(20);
+    	int posEstado = random.nextInt(8);
     	List<Integer> estados = getEstadoCedulas();
     	return estados.get(posEstado);
     }
